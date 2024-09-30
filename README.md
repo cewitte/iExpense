@@ -1,8 +1,19 @@
 # iExpense
-An expense tracker that separates personal costs from business costs (by Paul Hudson - @twostraws).
+An expense tracker that separates personal costs from business costs (by Paul Hudson - [@twostraws](https://x.com/twostraws)).
 
-SwiftUI gives us the ```onDelete()``` modifier for us to use to control how objects should be deleted from a collection. In practice, this is almost exclusively used with ```List``` and ```ForEach```: we create a list of rows that are shown using ```ForEach```, then attach ```onDelete()``` to that ```ForEach``` so the user can remove rows they don’t want.
+## Storing user settings with `UserDefaults` and `@AppStorage`
 
-This is another place where SwiftUI does a heck of a lot of work on our behalf, but it does have a few interesting quirks.
+You can use both `UserDefaults` and `@AppStorage` to store user data in between sessions (when a user closes the app and opens it back again), although the latter is easier to use.
 
-![Click to open sheet](images/on_delete.png)
+To use `UserDefaults`, you can do like this:
+
+```
+UserDefaults.standard.set(tapCount, forKey: "Tap")
+@State private var tapCount = UserDefaults.standard.integer(forKey: "Tap")
+```
+
+`@AppStorage` is much easier. All it takes is:
+
+`@AppStorage("tapCount") private var tapCount = 0`
+
+**Important:** When it comes to you submitting an app to the App Store, Apple asks that you let them know why you're loading and saving data using UserDefaults. This also applies to the `@AppStorage` property wrapper. It's nothing to worry about, they just want to make sure developers aren't trying to identify users across apps.
