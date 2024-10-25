@@ -34,6 +34,19 @@ class Expenses {
         
         items = []
     }
+    
+    var containsBusinessItem: Bool {
+        items.contains(where: { $0.type == "Business" })
+    }
+    
+    var containsPersonalItem: Bool {
+        items.contains(where: { $0.type == "Personal" })
+    }
+    
+    var containsOtherItem: Bool {
+        items.contains(where: { $0.type == "Other" })
+    }
+    
 }
 
 struct ContentView: View {
@@ -43,11 +56,18 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             List {
-                ExpensesView(name: "Business", expenses: expenses)
+                if expenses.containsBusinessItem {
+                    ExpensesView(name: "Business", expenses: expenses)
+                }
+                               
+                if expenses.containsPersonalItem {
+                    ExpensesView(name: "Personal", expenses: expenses)
+                }
                 
-                ExpensesView(name: "Personal", expenses: expenses)
+                if expenses.containsOtherItem {
+                    ExpensesView(name: "Other", expenses: expenses)
+                }
                 
-                ExpensesView(name: "Other", expenses: expenses)
             }
             .navigationTitle("iExpense")
             .toolbar {
