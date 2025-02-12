@@ -41,6 +41,8 @@ struct ContentView: View {
     
     @State private var showingAddExpense = false
     
+//    Change project 7 (iExpense) so that it uses NavigationLink for adding new expenses rather than a sheet. (Tip: The dismiss() code works great here, but you might want to add the navigationBarBackButtonHidden() modifier so they have to explicitly choose Cancel.)
+    
     var body: some View {
         NavigationStack {
             List {
@@ -61,14 +63,20 @@ struct ContentView: View {
             }
             .navigationTitle("iExpense")
             .toolbar {
-                Button("Add Expense", systemImage: "plus") {
-                    showingAddExpense = true
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add Expense", systemImage: "plus") {
+                        showingAddExpense = true
+                    }
                 }
             }
+            .background(
+                NavigationLink("", destination: AddView(expenses: expenses), isActive: $showingAddExpense)
+                    .hidden()
+            )
+            
         }
-        .sheet(isPresented: $showingAddExpense) {
-            AddView(expenses: expenses)
-        }
+        
         
     }
     

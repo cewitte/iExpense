@@ -33,14 +33,25 @@ struct AddView: View {
                 TextField("Amount", value: $amount, format: .currency(code: "USD"))
                     .keyboardType(.decimalPad)
             }
-            .navigationTitle("Add new expense")
+            .navigationTitle($name)
             .toolbar {
-                Button("Save") {
-                    let item = ExpenseItem(name: name, type: type, amount: amount)
-                    expenses.items.append(item)
-                    dismiss()
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        let item = ExpenseItem(name: name, type: type, amount: amount)
+                        expenses.items.append(item)
+                        dismiss()
+                    }
                 }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                
+            
             }
+            .navigationBarBackButtonHidden()
         }
                     
     }
