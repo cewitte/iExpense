@@ -12,3 +12,9 @@ An expense tracker that separates personal costs from business costs (by Paul Hu
 Source URL: [link](https://www.hackingwithswift.com/books/ios-swiftui/swiftdata-wrap-up)
 
 Branch: `project-12-challenge-1`
+
+### Acknowledgments
+
+Original code created by: [Paul Hudson - @twostraws](https://x.com/twostraws) (Thank you!)
+
+Made with :heart: by [@cewitte](https://x.com/cewitte)
