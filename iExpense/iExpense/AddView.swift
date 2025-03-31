@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddView: View {
     @State private var name = ""
@@ -14,7 +15,8 @@ struct AddView: View {
     
     let types = ["Personal", "Business", "Other"]
     
-    var expenses: Expenses
+    @Environment(\.modelContext) var modelContext
+    @Query var expenses: [Expense]
     
     @Environment(\.dismiss) var dismiss
     
@@ -37,8 +39,8 @@ struct AddView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        let item = ExpenseItem(name: name, type: type, amount: amount)
-                        expenses.items.append(item)
+                        let item = Expense(name: name, type: type, amount: amount)
+                        modelContext.insert(item)
                         dismiss()
                     }
                 }
@@ -48,15 +50,13 @@ struct AddView: View {
                         dismiss()
                     }
                 }
-                
-            
             }
             .navigationBarBackButtonHidden()
         }
-                    
     }
 }
 
 #Preview {
-    AddView(expenses: .init())
+    AddView()
+        .modelContainer(for: Expense.self)
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ExpenseItem: Identifiable, Codable {
     var id = UUID()
@@ -14,39 +15,16 @@ struct ExpenseItem: Identifiable, Codable {
     let amount: Decimal
 }
 
-@Observable
-class Expenses {
-    var items = [ExpenseItem]() {
-        didSet {
-            if let encoded = try? JSONEncoder().encode(items) {
-                UserDefaults.standard.set(encoded, forKey: "Items")
-            }
-        }
-    }
-    
-    init() {
-        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
-            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
-                items = decodedItems
-                return
-            }
-        }
-        
-        items = []
-    }
-}
-
 struct ContentView: View {
-    @State private var expenses = Expenses()
+    @Environment(\.modelContext) var modelContext
+    @Query var expenses : [Expense]
     
     @State private var showingAddExpense = false
-    
-//    Change project 7 (iExpense) so that it uses NavigationLink for adding new expenses rather than a sheet. (Tip: The dismiss() code works great here, but you might want to add the navigationBarBackButtonHidden() modifier so they have to explicitly choose Cancel.)
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(expenses.items) { item in
+                ForEach(expenses) { item in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(item.name)
@@ -71,20 +49,19 @@ struct ContentView: View {
                 }
             }
             .background(
-                NavigationLink("", destination: AddView(expenses: expenses), isActive: $showingAddExpense)
+                NavigationLink("", destination: AddView(), isActive: $showingAddExpense)
                     .hidden()
             )
             
         }
-        
-        
     }
     
     func removeItems(at offsets: IndexSet) {
-        expenses.items.remove(atOffsets: offsets)
-        print(expenses.items)
+        for index in offsets {
+            let expense = expenses[index] // Obtém o item real
+            modelContext.delete(expense)  // Deleta o item do contexto
+        }
     }
-    
 }
 
 #Preview {
