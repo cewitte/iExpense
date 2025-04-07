@@ -8,13 +8,6 @@
 import SwiftUI
 import SwiftData
 
-struct ExpenseItem: Identifiable, Codable {
-    var id = UUID()
-    let name: String
-    let type: String
-    let amount: Decimal
-}
-
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @Query var expenses : [Expense]
@@ -26,9 +19,13 @@ struct ContentView: View {
         SortDescriptor(\Expense.amount)
     ]
     
+    @State private var type = "All"
+    
+    let types = ["All", "Personal", "Business", "Other"]
+    
     var body: some View {
         NavigationStack {
-            ExpensesView(sortOrder: sortOrder)
+            ExpensesView(sortOrder: sortOrder, type: type)
                 .navigationTitle("iExpense")
                 .toolbar {
                     
@@ -54,19 +51,22 @@ struct ContentView: View {
                                     ])
                             }
                         }
-                    }  
+                    }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu("Type", systemImage: "line.3.horizontal.decrease.circle"){
+                            Picker("Types", selection: $type) {
+                                ForEach(types, id: \.self) { key in
+                                    Text(key)
+                                }
+                            }
+                        }
+                    }
                 }
                 .background(
                     NavigationLink("", destination: AddView(), isActive: $showingAddExpense)
                         .hidden()
                 )
-        }
-    }
-    
-    func removeItems(at offsets: IndexSet) {
-        for index in offsets {
-            let expense = expenses[index] // Obtém o item real
-            modelContext.delete(expense)  // Deleta o item do contexto
         }
     }
 }

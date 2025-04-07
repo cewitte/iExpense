@@ -19,6 +19,12 @@ Source URL: [link](https://www.hackingwithswift.com/books/ios-swiftui/swiftdata-
 
 Branch: `project-12-challenge-2`
 
+### Project 12 - Challenge 3: Add a filter option to show all expenses, just personal expenses, or just business expenses
+
+Source URL: [link](https://www.hackingwithswift.com/books/ios-swiftui/swiftdata-wrap-up)
+
+Branch: `project-12-challenge-3`
+
 ### Acknowledgments
 
 Original code created by: [Paul Hudson - @twostraws](https://x.com/twostraws) (Thank you!)
