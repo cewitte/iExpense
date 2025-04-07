@@ -21,38 +21,45 @@ struct ContentView: View {
     
     @State private var showingAddExpense = false
     
+    @State private var sortOrder = [
+        SortDescriptor(\Expense.name),
+        SortDescriptor(\Expense.amount)
+    ]
+    
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(expenses) { item in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(item.name)
-                                .font(.headline)
-                            Text(item.type)
+            ExpensesView(sortOrder: sortOrder)
+                .navigationTitle("iExpense")
+                .toolbar {
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Add Expense", systemImage: "plus") {
+                            showingAddExpense = true
                         }
-                        
-                        Spacer()
-                        
-                        Text(item.amount, format: .currency(code: "USD"))
                     }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu("Sort", systemImage: "arrow.up.arrow.down"){
+                            Picker("Sort", selection: $sortOrder){
+                                Text("Sort by Name")
+                                    .tag([
+                                        SortDescriptor(\Expense.name),
+                                        SortDescriptor(\Expense.amount)
+                                    ])
+                                
+                                Text("Sort by Amount")
+                                    .tag([
+                                        SortDescriptor(\Expense.amount),
+                                        SortDescriptor(\Expense.name)
+                                    ])
+                            }
+                        }
+                    }  
                 }
-                .onDelete(perform: removeItems)
-            }
-            .navigationTitle("iExpense")
-            .toolbar {
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add Expense", systemImage: "plus") {
-                        showingAddExpense = true
-                    }
-                }
-            }
-            .background(
-                NavigationLink("", destination: AddView(), isActive: $showingAddExpense)
-                    .hidden()
-            )
-            
+                .background(
+                    NavigationLink("", destination: AddView(), isActive: $showingAddExpense)
+                        .hidden()
+                )
         }
     }
     
