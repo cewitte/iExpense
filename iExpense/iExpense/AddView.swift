@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddView: View {
     @State private var name = ""
@@ -14,7 +15,8 @@ struct AddView: View {
     
     let types = ["Personal", "Business", "Other"]
     
-    var expenses: Expenses
+    @Environment(\.modelContext) var modelContext
+    @Query var expenses: [Expense]
     
     @Environment(\.dismiss) var dismiss
     
@@ -33,19 +35,28 @@ struct AddView: View {
                 TextField("Amount", value: $amount, format: .currency(code: "USD"))
                     .keyboardType(.decimalPad)
             }
-            .navigationTitle("Add new expense")
+            .navigationTitle($name)
             .toolbar {
-                Button("Save") {
-                    let item = ExpenseItem(name: name, type: type, amount: amount)
-                    expenses.items.append(item)
-                    dismiss()
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        let item = Expense(name: name, type: type, amount: amount)
+                        modelContext.insert(item)
+                        dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
                 }
             }
+            .navigationBarBackButtonHidden()
         }
-                    
     }
 }
 
 #Preview {
-    AddView(expenses: .init())
+    AddView()
+        .modelContainer(for: Expense.self)
 }
