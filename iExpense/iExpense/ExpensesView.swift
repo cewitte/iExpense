@@ -28,6 +28,9 @@ struct ExpensesView: View {
                     
                     Text(item.amount, format: .currency(code: "USD"))
                 }
+                // Fix the list rows in iExpense so they read out the name and value in one single VoiceOver label, and their type in a hint.
+                .accessibilityElement()
+                .accessibilityLabel("\(item.name): \(item.amount)")
             }
             .onDelete(perform: removeItems)
         }
